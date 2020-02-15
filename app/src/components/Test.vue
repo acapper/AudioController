@@ -6,13 +6,16 @@
     </ul>
 
     <ul>
-      <li v-for="(value, name) in info" :key="name">{{name}}: {{ value }}</li>
+      <li v-for="(value, name) in info" :key="name">{{ name }}: {{ value }}</li>
     </ul>
 
     <ul>
-      <li v-for="(value, name) in audio" :key="name">{{name}}: {{ value }}</li>
+      <li v-for="(value, name) in audio" :key="name">
+        {{ name }}: {{ value }}
+      </li>
     </ul>
-    {{post}}
+    {{ post }}
+    {{ test }}
     <a href="http://command.com/sample/exitprogram">Close App</a>
   </div>
 </template>
@@ -27,8 +30,9 @@ export default class Test extends Vue {
   info = "";
   audio = "";
   post = "";
+  test = "";
 
-  arr = new Array(1, 2, 3, 4, 5);
+  arr = [1, 2, 3, 4, 5];
 
   Chromely = new ChromelyService();
 

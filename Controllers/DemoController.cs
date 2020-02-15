@@ -4,14 +4,20 @@ using Chromely.Core.Configuration;
 using Chromely.Core.Network;
 
 namespace AudioController.Controllers {
+
 	public class DemoController : ChromelyController {
 		private readonly IChromelyConfiguration _config;
 
 		public DemoController (IChromelyConfiguration config) {
 			_config = config;
+			RegisterGetRequest ("/sample/new", GetData);
+			RegisterGetRequest ("/sample/demo", Test);
+
+			RegisterPostRequest ("/sample/execute", Execute);
+
+			RegisterCommand ("/sample/exitprogram", ExitProgram);
 		}
 
-		[HttpGet (Route = "/sample/demo")]
 		private ChromelyResponse GetData (ChromelyRequest request) {
 
 			var data = new { SomeField = 1, SomeOtherField = "Two" };
@@ -21,7 +27,13 @@ namespace AudioController.Controllers {
 			};
 		}
 
-		[HttpPost (Route = "/sample/execute")]
+		private ChromelyResponse Test (ChromelyRequest request) {
+
+			return new ChromelyResponse (request.Id) {
+				Data = "data"
+			};
+		}
+
 		private ChromelyResponse Execute (ChromelyRequest request) {
 			Console.WriteLine ("Post");
 			return new ChromelyResponse (request.Id) {
@@ -29,7 +41,6 @@ namespace AudioController.Controllers {
 			};
 		}
 
-		[Command (Route = "/sample/exitprogram")]
 		public void ExitProgram (IDictionary<string, string> queryParameters) {
 			System.Environment.Exit (1);
 		}

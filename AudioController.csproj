@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="Chromely" Version="5.0.77-pre04" />
+    <PackageReference Include="NAudio" Version="1.10.0" />
   </ItemGroup>
 
 	<ItemGroup>
@@ -47,6 +48,11 @@
   </Target>
 
 	<Target Name="DebugChromelyApp" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' ">
+    <Message Importance="High" Text="Linting Vue App..." />
+    <Exec Command="npm run lint" WorkingDirectory="app" ContinueOnError="true" ConsoleToMSBuild="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
+    </Exec>
+    
     <Message Importance="High" Text="Building Vue App.." />
     <Exec Command="npm run build" WorkingDirectory="app" ContinueOnError="false" ConsoleToMSBuild="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
