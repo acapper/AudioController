@@ -1,21 +1,15 @@
 ﻿using System;
 using Chromely.Core;
-using Chromely.Core.Configuration;
 
-namespace My_Chromely_App
-{
-	class Program
-	{
+namespace AudioController {
+	class Program {
 		[STAThread]
-		static void Main(string[] args)
-		{
-			//IChromelyConfiguration config = DefaultConfiguration.CreateForRuntimePlatform();
-
+		static void Main (string[] args) {
 			AppBuilder
-			.Create()
-			.UseApp<DemoChromelyApp>()
-			.Build()
-			.Run(args);
+				.Create ()
+				.UseApp<AudioControllerApp> ()
+				.Build ()
+				.Run (args);
 		}
 
 	}

@@ -1,7 +1,7 @@
 {
 	"appName": "Audio Controller",
 	"startUrl": {
-		"url": "local://app/index.html",
+		"url": "local://dist/index.html",
 		"loadType": "localResource"
 	},
 	"loadCefBinariesIfNotFound": true,
@@ -57,9 +57,6 @@
 			"urlSchemeType": "external",
 			"baseUrlStrict": true
 		}
-	],
-	"controllerAssemblies": [
-		"Chromely.External.Controllers.dll"
 	],
 	"customSettings": [
 		{

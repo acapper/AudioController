@@ -6,7 +6,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="1.0.0-msbuild2-final" />
+    <Watch Include="**\*" Exclude="**\node_modules\**\*;**\*.js.map;obj\**\*;bin\**\*;.vscode\**\*;app\dist\**\*" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Chromely" Version="5.0.77-pre04" />
+  </ItemGroup>
+
+	<ItemGroup>
+    <Compile Remove="app\node_modules\**" />
+    <EmbeddedResource Remove="app\node_modules\**" />
+    <None Remove="app\node_modules\**" />
   </ItemGroup>
 
 	<ItemGroup>
@@ -17,5 +28,38 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
 	</ItemGroup>
+
+	<Target Name="DependsOn" DependsOnTargets="ValidateChromelyApp">
+    <Message Text="Target : DependsOn" />
+  </Target>
+
+	<Target Name="ValidateChromelyApp" BeforeTargets="Build">
+    <Message Importance="High" Text="Checking if Node.js is installed.." />
+    <Exec Command="node --version" ContinueOnError="false">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+    <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+    <Message Condition="'$(ErrorCode)' == '0'" Importance="High" Text="Node.js is installed!" />
+
+    <Message Importance="High" Text="Checking if node_modules exists.." />
+    <Message Importance="High" Text="Running yarn, node_modules not found! (this could take a while)" Condition="!Exists('$(ProjectDir)app\node_modules')" />
+    <Exec Command="yarn" Condition="!Exists('$(ProjectDir)app\node_modules')" WorkingDirectory="app" ContinueOnError="false" />
+  </Target>
+
+	<Target Name="DebugChromelyApp" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' ">
+    <Message Importance="High" Text="Building Vue App.." />
+    <Exec Command="npm run build" WorkingDirectory="app" ContinueOnError="false" ConsoleToMSBuild="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
+    </Exec>
+
+    <Message Importance="High" Text="Copying Vue App to debug folder.." />
+    <Exec Command="xcopy &quot;$(ProjectDir)app\dist&quot; &quot;$(TargetDir)dist&quot;   /i /s /r /y /c" />
+  </Target>
+
+	<Target Name="ReleaseChromelyApp" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Release' ">
+    <Exec Command="npm run build" WorkingDirectory="app" ContinueOnError="true" ConsoleToMSBuild="false">
+      <Output TaskParameter="ConsoleOutput" PropertyName="OutputOfExec" />
+    </Exec>
+  </Target>
 
 </Project>
